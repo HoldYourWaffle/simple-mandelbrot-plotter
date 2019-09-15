@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Mandelbrot plotter</title>
+
+	<script src="plotter.ts" defer></script>
+	<link rel="stylesheet" href="index.scss">
+</head>
+
+<body>
+	<section id="settings">
+		<table>
+			<tr>
+				<th>
+
+				</th>
+
+				<th>
+					X
+				</th>
+
+				<th>
+					Y
+				</th>
+			</tr>
+
+			<tr>
+				<td>
+					Resolution <i>(px)</i>
+				</td>
+
+				<td>
+					<input type="text" id="width" value="500">
+				</td>
+
+				<td>
+					<input type="text" id="height" value="500">
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					Window <i>(min &rightarrow; max)</i>
+				</td>
+
+				<td>
+					<input type="number" id="real1" value="-2">
+					&nbsp;&rightarrow;&nbsp;
+					<input type="number" id="real2" value="2">
+				</td>
+
+				<td>
+					<input type="number" id="complex1" value="-2"> <i>i</i>
+					&nbsp;&rightarrow;&nbsp;
+					<input type="number" id="complex2" value="2"> <i>i</i>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					Step <i>(n / px)</i>
+				</td>
+
+				<td id="step1"></td>
+				<td id="step2"></td>
+			</tr>
+			
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			
+			<tr>
+				<td>Max interations <i>(n)</i></td>
+				<td colspan="2">
+					<input type="number" id="iterations" value="100">
+				</td>
+			</tr>
+			
+			<!-- <tr>
+				<td>Spectrum</td>
+				<td colspan="2">
+					TODO
+				</td>
+			</tr> -->
+		</table>
+
+		<button id="submit">Plot</button>
+	</section>
+
+	<canvas id="plot"></canvas>
+</body>
+
+</html>

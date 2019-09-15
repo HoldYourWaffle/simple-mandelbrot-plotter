@@ -1,0 +1,35 @@
+table {
+	border-collapse: collapse;
+	margin: auto;
+}
+
+tr td:nth-child(1) {
+	text-align: left;
+}
+
+td {
+	text-align: center;
+	padding: 5px 10px;
+	border: 1px solid black;
+}
+
+input {
+	text-align: center;
+	width: 60px;
+}
+
+#settings {
+	width: 600px;
+	margin: 30px auto;
+}
+
+#submit {
+	display: block;
+	margin: 30px auto;
+}
+
+canvas {
+	border: 1px solid black;
+	display: block;
+	margin: auto;
+}
