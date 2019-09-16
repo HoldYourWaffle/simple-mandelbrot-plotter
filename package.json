@@ -2,8 +2,12 @@
 	"author": "HoldYourWaffle <supershitcodemonkey@gmail.com> (http://rubber-duck-debugging.nl)",
 	"license": "MIT",
 	"devDependencies": {
+		"@types/complex.js": "^2.0.1",
 		"parcel-bundler": "^1.12.3",
 		"sass": "^1.22.12",
 		"typescript": "^3.6.3"
+	},
+	"dependencies": {
+		"complex.js": "^2.0.11"
 	}
 }

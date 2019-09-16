@@ -1,3 +1,5 @@
+import Complex from 'complex.js'
+
 const $ = (id: string) => document.getElementById(id); //can't shorten because browsers are weird
 const v = (id: string) => parseInt(($(id) as HTMLInputElement).value);
 
@@ -17,8 +19,8 @@ const settings = {
 	},
 	
 	resolution: {
-		get width() { return v('width') },
-		get height() { return v('height') }
+		get width() { return v('resw') },
+		get height() { return v('resh') }
 	},
 	
 	get iterations() { return v('iterations') }
@@ -32,27 +34,42 @@ const step = {
 		this.r = settings.window.real.size / settings.resolution.width;
 		this.c = settings.window.complex.size / settings.resolution.height;
 		
-		($('step1') as HTMLTableCellElement).innerHTML = this.r;
-		($('step2') as HTMLTableCellElement).innerHTML = this.c;
+		($('step1') as HTMLTableCellElement).innerHTML = this.r.toString();
+		($('step2') as HTMLTableCellElement).innerHTML = this.c.toString();
 	}
 }
 
 const butt = $('submit') as HTMLButtonElement;
 const canvas = $('plot') as HTMLCanvasElement;
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d')!;
 
 
+
+function clear() {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 
 function plot() {
+	console.log('Plotting...');
+	butt.disabled = true;
+	
+	step.recalculateStep(); //FIXME why is this needed?
+	clear();
+	
 	const img = ctx.createImageData(settings.resolution.width, settings.resolution.height);
+	canvas.width = settings.resolution.width;
+	canvas.height = settings.resolution.height;
 	
 	for (let x = 0; x < settings.resolution.width; x++) {
 		for (let y = 0; y < settings.resolution.height; y++) {
-			setPixel(img, x, y, getColor(calculateMandelbrot(x * step.r, y * step.c)));
+			setPixel(img, x, y, getColor(calculateMandelbrot(new Complex(settings.window.real.min + (x * step.r), settings.window.complex.min + (y * step.c)))));
 		}
 	}
 	
 	ctx.putImageData(img, 0, 0);
+	
+	butt.disabled = false;
+	console.log('Done!');
 }
 
 function setPixel(img: ImageData, x: number, y: number, c: [number, number, number]) {
@@ -64,22 +81,39 @@ function setPixel(img: ImageData, x: number, y: number, c: [number, number, numb
 }
 
 function getColor(value: number): [number, number, number] {
-	const val = Math.min(255, value);
-	return [val, val, val];
+	const v = (1-value) * 255;
+	return [v, v, v];
 }
 
-function calculateMandelbrot(r: number, c: number): number {
-	//NOW implement
+function calculateMandelbrot(c: Complex): number {
+	const d = Math.sqrt( Math.pow(c.re, 2) + Math.pow(c.im, 2) );
+	const f = (z: number) => Math.pow(z, 2) + d;
+	
+	let z = 0, i = 0;
+	
+	while (i <= settings.iterations) {
+		z = f(z);
+		
+		if (z > 2) {
+			//break;
+			return 1;
+		} else {
+			i++;
+		}
+	}
+	
+	//return i / settings.iterations;
+	return 0;
 }
 
 
 
 butt.onclick = plot;
+$('clear')!.onclick = clear;
 
-$('real1').onchange = $('real2').onchange =
-	$('complex1').onchange = $('complex2').onchange =
-	$('width').onchange = $('height').onchange =
+$('real1')!.onchange = $('real2')!.onchange =
+	$('complex1')!.onchange = $('complex2')!.onchange =
+	$('resw')!.onchange = $('resh')!.onchange =
 	step.recalculateStep;
 
-step.recalculateStep();
 plot();
