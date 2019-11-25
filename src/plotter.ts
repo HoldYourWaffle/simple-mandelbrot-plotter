@@ -3,6 +3,8 @@ import Complex from 'complex.js'
 const $ = (id: string) => document.getElementById(id); //can't shorten because browsers are weird
 const v = (id: string) => parseInt(($(id) as HTMLInputElement).value);
 
+type SetType = 'mandelbrot' | 'julia';
+
 const settings = {
 	window: {
 		real: {
@@ -23,7 +25,20 @@ const settings = {
 		get height() { return v('resh') }
 	},
 	
-	get iterations() { return v('iterations') }
+	juliaC: {
+		get a() { return v('julia-c-a') },
+		get b() { return v('julia-c-b') }
+	},
+	
+	get power() { return v('power') },
+	
+	get iterations() { return v('iterations') },
+	
+	get setType(): SetType {
+		return (document.querySelector('input[name="set"]:checked')! as HTMLInputElement).value as SetType
+	}
+	
+	
 }
 
 const step = {
@@ -60,9 +75,11 @@ function plot() {
 	canvas.width = settings.resolution.width;
 	canvas.height = settings.resolution.height;
 	
+	const func = settings.setType === 'mandelbrot' ? calculateMandelbrot : calculateJulia;
+	
 	for (let x = 0; x < settings.resolution.width; x++) {
 		for (let y = 0; y < settings.resolution.height; y++) {
-			setPixel(img, x, y, getColor(calculateMandelbrot(new Complex(settings.window.real.min + (x * step.r), settings.window.complex.min + (y * step.c)))));
+			setPixel(img, x, y, getColor(func(new Complex(settings.window.real.min + (x * step.r), settings.window.complex.min + (y * step.c)))));
 		}
 	}
 	
@@ -89,7 +106,7 @@ function getColor(value: number): [number, number, number] {
 
 function calculateMandelbrot(c: Complex): number {
 	function iterate(z: Complex): Complex {
-		return z.mul(z).add(c);
+		return z.pow(new Complex(settings.power, 0)).add(c);
 	}
 	
 	
@@ -103,6 +120,32 @@ function calculateMandelbrot(c: Complex): number {
 		
 		if (d > 2) {
 			//return 1;
+			break;
+		} else {
+			i++;
+		}
+	}
+	
+	return i / settings.iterations;
+}
+
+
+function calculateJulia(z: Complex): number {
+	const c = new Complex(settings.juliaC.a, settings.juliaC.b);
+	
+	function iterate(z: Complex): Complex {
+		return z.pow(new Complex(settings.power, 0)).add(c);
+	}
+	
+	let i = 0;
+	//let z = new Complex(0, 0);
+	
+	while (i <= settings.iterations) {
+		z = iterate(z);
+		
+		const d = Math.sqrt(z.re ** 2 + z.im ** 2);
+		
+		if (d > 2) {
 			break;
 		} else {
 			i++;
