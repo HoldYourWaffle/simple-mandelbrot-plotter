@@ -85,25 +85,31 @@ function getColor(value: number): [number, number, number] {
 	return [v, v, v];
 }
 
+
+
 function calculateMandelbrot(c: Complex): number {
-	const d = Math.sqrt( Math.pow(c.re, 2) + Math.pow(c.im, 2) );
-	const f = (z: number) => Math.pow(z, 2) + d;
+	function iterate(z: Complex): Complex {
+		return z.mul(z).add(c);
+	}
 	
-	let z = 0, i = 0;
+	
+	let i = 0;
+	let z = new Complex(0, 0);
 	
 	while (i <= settings.iterations) {
-		z = f(z);
+		z = iterate(z);
 		
-		if (z > 2) {
-			//break;
-			return 1;
+		const d = Math.sqrt( z.re ** 2 + z.im ** 2);
+		
+		if (d > 2) {
+			//return 1;
+			break;
 		} else {
 			i++;
 		}
 	}
 	
-	//return i / settings.iterations;
-	return 0;
+	return i / settings.iterations;
 }
 
 
