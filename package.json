@@ -3,9 +3,9 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@types/complex.js": "^2.0.1",
-		"parcel-bundler": "^1.12.3",
-		"sass": "^1.22.12",
-		"typescript": "^3.6.3"
+		"parcel-bundler": "^1.12.4",
+		"sass": "^1.25.0",
+		"typescript": "^3.7.5"
 	},
 	"dependencies": {
 		"complex.js": "^2.0.11"
